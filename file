@@ -1,0 +1,48 @@
+Stop ec2 Instance
+Now, let's see the playbook to stop the ec2 instance
+
+
+---
+- hosts: myserver
+  remote_user: ubuntu
+  tasks:
+  - name: Gather facts
+    action: ec2_facts
+
+  - name: Stop myserver instance
+    local_action:
+        module: ec2
+        region: "ap-southeast-1"
+        instance_ids: "{{ansible_ec2_instance_id}}"
+        state: stopped
+
+Here the hosts 'myserver' should be defined in the hosts inventory file.
+The ec2_facts gathers information about myserver like the instance_id
+The module ec2 is used to stop the instance with state stopped.
+
+Run the above playbook to stop the instance.
+
+
+ansible-playbook -i hosts stop-myserver.yml -vvvv
+
+
+Start ec2 instance
+We can start the ec2 instance with ansible by the following playbook
+
+
+---
+- name: Start  instances
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  vars:
+    instance_ids:
+      - 'i-XXXXXXXX'
+    region: ap-southeast-1
+  tasks:
+    - name: Start the feature instances
+      ec2:
+        instance_ids: '{{ instance_ids }}'
+        region: '{{ region }}'
+        state: running
+        wait: True
