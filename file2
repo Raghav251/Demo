@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 - name: Start a GCP instance which is currently stopped
   hosts: to_start_up
@@ -41,3 +42,48 @@ gcp compute resource-policies create instance-schedule SCHEDULE_NAME \
     [--timezone=TIME_ZONE] \
     [--initiation-date=INITIATION_DATE] \
     [--end-date=END_DATE]
+=======
+---
+- name: Start a GCP instance which is currently stopped
+  hosts: to_start_up
+  gather_facts: false
+
+  tasks:
+
+    - name: Start a GCP VM instance which is currently stopped
+      gcp_compute_instance:
+        name: "{{ inventory_hostname_short }}"
+        deletion_protection: no
+        machine_type: "{{ gcp_ce_machine_type }}"
+        zone: "{{ gcp_ce_zone }}"
+        project: "{{ gcp_ce_project_name }}"
+        auth_kind: serviceaccount
+        service_account_file: "{{ gcp_ce_service_account_keyfile }}"
+        status: RUNNING
+      delegate_to: localhost
+
+  tasks:
+
+    - name: Stop a GCP VM instance which is currently running
+      gcp_compute_instance:
+        name: "{{ inventory_hostname_short }}"
+        deletion_protection: no
+        machine_type: "{{ gcp_ce_machine_type }}"
+        zone: "{{ gcp_ce_zone }}"
+        project: "{{ gcp_ce_project_name }}"
+        auth_kind: serviceaccount
+        service_account_file: "{{ gcp_ce_service_account_keyfile }}"
+        status: STOP
+      delegate_to: localhost
+
+
+
+gcp compute resource-policies create instance-schedule SCHEDULE_NAME \
+    [--description='SCHEDULE_DESCRIPTION'] \
+    [--region=REGION] \
+    [--vm-start-schedule='START-OPERATION_SCHEDULE'] \
+    [--vm-stop-schedule='STOP-OPERATION_SCHEDULE'] \
+    [--timezone=TIME_ZONE] \
+    [--initiation-date=INITIATION_DATE] \
+    [--end-date=END_DATE]
+>>>>>>> 3336279e928f88ffbbac0a2b3edf7e6859b82066
