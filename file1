@@ -1,0 +1,23 @@
+---
+description: Every Monday to Friday in 2022, start VMs at 8 AM and stop VMs at 5 PM.
+hosts: all
+ 
+---
+tasks: 
+ - name: schedling time
+ instanceSchedulePolicy:
+ expirationTime: '2022-12-31T23:59:59Z'
+ startTime: '2022-01-01T00:00:00Z'
+ timeZone: UTC
+ vmStartSchedule:
+   schedule: 0 8 * * MON-FRI
+ vmStopSchedule:
+   schedule: 0 17 * * MON-FRI
+
+ - name: example-instance-schedule
+ region: https://www.googleapis.com/compute/v1/projects/example-project/regions/us-west1
+ resourceStatus:
+ instanceSchedulePolicy:
+ nextRunStartTime: '2022-01-03T08:00:00Z'
+---
+status: READY
